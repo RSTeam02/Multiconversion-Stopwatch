@@ -9,11 +9,11 @@ class Controller {
         this.view = new View();
         this.classCb = document.getElementsByClassName("cb");
         this.classRbConv = document.getElementsByClassName("rbConv");
-        this.classBtn = document.getElementsByClassName("btn");
-        this.view.domView(this.getStrategy().start(["00", "00", "00", "0"]));
+        this.classBtn = document.getElementsByClassName("btn");        
         this.saveSettings();
         this.loadSettings();
         this.buttonListener();
+        this.view.domView(this.getStrategy().start(["00", "00", "00", "0"]));
     }
 
     //save settings when clicked one of buttons
@@ -112,8 +112,6 @@ class Controller {
                 strategy = new ConvertStrategy(new Factory().execConvert(this.classRbConv[i].id));
             }
         }
-
         return strategy;
     }
-
 }
