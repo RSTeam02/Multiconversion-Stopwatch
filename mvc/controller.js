@@ -78,7 +78,7 @@ class Controller {
         var delayed = 0;
         var start = 0;
         var addTotal = 0;
-       
+
 
         document.getElementById("resetBtn").addEventListener("click", () => {
             delayed = 0;
@@ -101,12 +101,12 @@ class Controller {
         document.getElementById("lapBtn").addEventListener("click", () => {
             if (running) {
                 start = Math.floor(new Date().getTime() / 10);
-                delayed = 0;             
+                delayed = 0;
                 var input = this.model.elapsedLap;
                 //total: add laps
                 document.getElementById("lapEntry").scrollTop = 0;
                 let lastLap = this.model.convertHms(input);
-                addTotal += this.model.elapsedLap;
+                addTotal += Math.floor(this.model.elapsedLap / 10) * 10;
                 this.view.setLap(lastLap, this.model.convertHms(addTotal));
                 clearInterval(interval);
                 updateDisp();
@@ -124,7 +124,7 @@ class Controller {
         var updateDisp = (last = 0) => {
             interval = setInterval(() => {
                 this.view.domLapView(this.getStrategy().start(this.model.startLap(start, delayed)));
-                this.view.domTotalView(this.getStrategy().start(this.model.startTotal(start, addTotal + last)));
+                this.view.domTotalView(this.getStrategy().start(this.model.startTotal(start, addTotal + Math.floor(last / 10) * 10)));
                 this.settings();
             }, 25);
         }
