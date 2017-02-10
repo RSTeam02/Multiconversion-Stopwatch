@@ -9,11 +9,12 @@ class Controller {
         this.view = new View();
         this.classCb = document.getElementsByClassName("cb");
         this.classRbConv = document.getElementsByClassName("rbConv");
-        this.classBtn = document.getElementsByClassName("btn");        
+        this.classBtn = document.getElementsByClassName("btn");
         this.saveSettings();
         this.loadSettings();
         this.buttonListener();
-        this.view.domView(this.getStrategy().start(["00", "00", "00", "0"]));
+        this.view.domLapView(this.getStrategy().start(["00", "00", "00", "0"]));
+        this.view.domTotalView(this.getStrategy().start(["00", "00", "00", "0"]));
     }
 
     //save settings when clicked one of buttons
@@ -76,22 +77,38 @@ class Controller {
         var interval;
         var delayed = 0;
         var start = 0;
+        var addTotal = 0;
 
         document.getElementById("resetBtn").addEventListener("click", () => {
             delayed = 0;
+            addTotal = 0;
             clearInterval(interval);
             running = false;
-            this.view.domView(this.getStrategy().start(["00", "00", "00", "0"]));
+            this.view.domLapView(this.getStrategy().start(["00", "00", "00", "0"]));
+            this.view.domTotalView(this.getStrategy().start(["00", "00", "00", "0"]));
+            this.view.clearTotal();
         });
         //update every 100ms
         document.getElementById("startBtn").addEventListener("click", () => {
             if (!running) {
                 start = Math.floor(new Date().getTime() / 10);
                 running = true;
-                interval = setInterval(() => {
-                    this.view.domView(this.getStrategy().start(this.model.startLap(start, delayed)));
-                    this.settings();
-                }, 100);
+                updateDisp();
+            }
+        });
+
+        document.getElementById("lapBtn").addEventListener("click", () => {
+            if (running) {
+                start = Math.floor(new Date().getTime() / 10);
+                delayed = 0;
+                var input = this.model.elapsedLap;
+                //total: add laps
+                document.getElementById("lapEntry").scrollTop = 0;
+                let lastLap = this.model.convertHms(input);
+                addTotal += this.model.elapsedLap;
+                this.view.setLap(lastLap, this.model.convertHms(addTotal));
+                clearInterval(interval);
+                updateDisp();
             }
         });
 
@@ -102,7 +119,16 @@ class Controller {
                 running = false;
             }
         });
+
+        var updateDisp = () => {
+            interval = setInterval(() => {
+                this.view.domLapView(this.getStrategy().start(this.model.startLap(start, delayed)));
+                this.view.domTotalView(this.getStrategy().start(this.model.startTotal(start, addTotal)));
+                this.settings();
+            }, 25);
+        }
     }
+
     //dependent on conversion mode
     getStrategy() {
         var strategy;

@@ -1,8 +1,23 @@
-
 class View {
 
-    domView(text) {
-        document.getElementById("binTable").innerHTML = text;
+    domLapView(text) {
+        document.getElementById("lapTable").innerHTML = text;
+    }
+
+    domTotalView(text) {
+        document.getElementById("totalTable").innerHTML = text;
+    }
+
+
+    setLap(inputLap, total) {
+        var entry = document.createElement("li");
+        var lapList = document.getElementById("lapEntry");
+        entry.appendChild(document.createTextNode(`Lap: ${inputLap.join(":")}, Total: ${total.join(":")}`));
+        lapList.insertBefore(entry, lapList.childNodes[0]);
+    }
+
+    clearTotal() {
+        document.getElementById("lapEntry").innerHTML = "";
     }
 
     invisBin() {
