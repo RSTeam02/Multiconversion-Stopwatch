@@ -118,7 +118,7 @@ class Controller {
                 //total: add laps
                 document.getElementById("lapEntry").scrollTop = 0;
                 let lastLap = this.model.convertHms(input);
-                addTotal += this.model.elapsedLap;
+                addTotal += Math.floor(this.model.elapsedLap / 10) * 10;
                 this.view.setLap(lastLap, this.model.convertHms(addTotal));
                 this.updateView(start, addTotal);
             }
