@@ -7,4 +7,4 @@ The Stopwatch is based on previous project (Multiconversion Clock) replaced with
 + 10.02: seperate tables for round and total time
 + 10.02: add html list elements for elapsed and total time descending (last laps first)   
 + 10.02: bugfix wrong total time when stop pushed and start again
-+ 10.02: 1 - decimal placefix for 1/100 sec accuracy
++ 10.02: 1 - decimal placefix for 1/10 sec accuracy

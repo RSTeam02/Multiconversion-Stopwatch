@@ -73,32 +73,42 @@ class Controller {
     }
 
     buttonListener() {
-        var running = false;
-        var interval;
+        var running = false;    
         var delayed = 0;
         var start = 0;
         var addTotal = 0;
+        var classBtn = document.getElementsByClassName("btn");
+        var btn = [];
 
+        //start
+        btn[0] = () => {
+            if (!running) {
+                classBtn[0].value = "stop";
+                start = Math.floor(new Date().getTime() / 10);
+                running = true;
+                this.updateView(start, addTotal, delayed);
+            } else {
+                classBtn[0].value = "start";
+                delayed = this.model.elapsedLap;
+                clearInterval(this.interval);
+                running = false;
+            }
+        }
 
-        document.getElementById("resetBtn").addEventListener("click", () => {
+        //reset
+        btn[2] = () => {
             delayed = 0;
             addTotal = 0;
-            clearInterval(interval);
+            clearInterval(this.interval);
+            classBtn[0].value = "start";
             running = false;
             this.view.domLapView(this.getStrategy().start(["00", "00", "00", "0"]));
             this.view.domTotalView(this.getStrategy().start(["00", "00", "00", "0"]));
             this.view.clearTotal();
-        });
-        //update every 100ms
-        document.getElementById("startBtn").addEventListener("click", () => {
-            if (!running) {
-                start = Math.floor(new Date().getTime() / 10);
-                running = true;
-                updateDisp(delayed);
-            }
-        });
+        }
 
-        document.getElementById("lapBtn").addEventListener("click", () => {
+        //next lap
+        btn[1] = () => {
             if (running) {
                 start = Math.floor(new Date().getTime() / 10);
                 delayed = 0;
@@ -108,26 +118,23 @@ class Controller {
                 let lastLap = this.model.convertHms(input);
                 addTotal += Math.floor(this.model.elapsedLap / 10) * 10;
                 this.view.setLap(lastLap, this.model.convertHms(addTotal));
-                clearInterval(interval);
-                updateDisp();
+                clearInterval(this.interval);
+                this.updateView(start, addTotal);
             }
-        });
-
-        document.getElementById("stopBtn").addEventListener("click", () => {
-            if (running) {
-                delayed = this.model.elapsedLap;
-                clearInterval(interval);
-                running = false;
-            }
-        });
-
-        var updateDisp = (last = 0) => {
-            interval = setInterval(() => {
-                this.view.domLapView(this.getStrategy().start(this.model.startLap(start, delayed)));
-                this.view.domTotalView(this.getStrategy().start(this.model.startTotal(start, addTotal + Math.floor(last / 10) * 10)));
-                this.settings();
-            }, 25);
         }
+
+        for (var i = 0; i < classBtn.length; i++) {
+            classBtn[i].addEventListener('click', btn[i], false);
+        }
+
+    }
+
+    updateView(start, addTotal, delayed = 0) {
+        this.interval = setInterval(() => {
+            this.view.domLapView(this.getStrategy().start(this.model.startLap(start, delayed)));
+            this.view.domTotalView(this.getStrategy().start(this.model.startTotal(start, addTotal + Math.floor(delayed / 10) * 10)));
+            this.settings();
+        }, 25);
     }
 
     //dependent on conversion mode
