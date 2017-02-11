@@ -73,7 +73,7 @@ class Controller {
     }
 
     buttonListener() {
-        var running = false;    
+        var running = false;
         var delayed = 0;
         var start = 0;
         var addTotal = 0;
@@ -86,7 +86,9 @@ class Controller {
                 classBtn[0].value = "stop";
                 start = Math.floor(new Date().getTime() / 10);
                 running = true;
-                this.updateView(start, addTotal, delayed);
+                this.interval = setInterval(() => {
+                    this.updateView(start, addTotal, delayed);
+                }, 25);
             } else {
                 classBtn[0].value = "start";
                 delayed = this.model.elapsedLap;
@@ -118,7 +120,6 @@ class Controller {
                 let lastLap = this.model.convertHms(input);
                 addTotal += Math.floor(this.model.elapsedLap / 10) * 10;
                 this.view.setLap(lastLap, this.model.convertHms(addTotal));
-                clearInterval(this.interval);
                 this.updateView(start, addTotal);
             }
         }
@@ -130,11 +131,9 @@ class Controller {
     }
 
     updateView(start, addTotal, delayed = 0) {
-        this.interval = setInterval(() => {
-            this.view.domLapView(this.getStrategy().start(this.model.startLap(start, delayed)));
-            this.view.domTotalView(this.getStrategy().start(this.model.startTotal(start, addTotal + Math.floor(delayed / 10) * 10)));
-            this.settings();
-        }, 25);
+        this.view.domLapView(this.getStrategy().start(this.model.startLap(start, delayed)));
+        this.view.domTotalView(this.getStrategy().start(this.model.startTotal(start, addTotal + Math.floor(delayed / 10) * 10)));
+        this.settings();
     }
 
     //dependent on conversion mode
