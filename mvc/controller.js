@@ -84,7 +84,7 @@ class Controller {
         btn[0] = () => {
             if (!running) {
                 classBtn[0].value = "stop";
-                start = Math.floor(new Date().getTime() / 10);
+                start = new Date().getTime();
                 running = true;
                 this.interval = setInterval(() => {
                     this.updateView(start, addTotal, delayed);
@@ -112,13 +112,13 @@ class Controller {
         //next lap
         btn[1] = () => {
             if (running) {
-                start = Math.floor(new Date().getTime() / 10);
+                start = new Date().getTime();
                 delayed = 0;
                 var input = this.model.elapsedLap;
                 //total: add laps
                 document.getElementById("lapEntry").scrollTop = 0;
                 let lastLap = this.model.convertHms(input);
-                addTotal += Math.floor(this.model.elapsedLap / 10) * 10;
+                addTotal += this.model.elapsedLap;
                 this.view.setLap(lastLap, this.model.convertHms(addTotal));
                 this.updateView(start, addTotal);
             }
@@ -132,7 +132,7 @@ class Controller {
 
     updateView(start, addTotal, delayed = 0) {
         this.view.domLapView(this.getStrategy().start(this.model.startLap(start, delayed)));
-        this.view.domTotalView(this.getStrategy().start(this.model.startTotal(start, addTotal + Math.floor(delayed / 10) * 10)));
+        this.view.domTotalView(this.getStrategy().start(this.model.startTotal(start, addTotal + delayed)));
         this.settings();
     }
 
