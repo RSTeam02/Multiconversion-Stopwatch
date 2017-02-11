@@ -18,7 +18,7 @@ class Stopper {
 
     convertHms(input) {
         var output = [];
-        var millis = Math.floor(input / 100) % 100
+        var millis = Math.round(input / 100) % 100
         var sec = Math.floor(input / 1000) % 60;
         var min = Math.floor(input / 60000) % 60;
         var hour = Math.floor(input / 3600000) % 24;
