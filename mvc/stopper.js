@@ -18,11 +18,18 @@ class Stopper {
 
     convertHms(input) {
         var output = [];
-        var millis = Math.floor(input / 100) % 100
+        var millis = ((input / 100) % 1000) % 10;
+        var mTenth = 0;
+
+        (millis < 9)
+            ? mTenth = Math.round(millis)
+            : mTenth = Math.floor(millis);
+
         var sec = Math.floor(input / 1000) % 60;
         var min = Math.floor(input / 60000) % 60;
         var hour = Math.floor(input / 3600000) % 24;
-        return [("0" + hour).slice(-2), ("0" + min).slice(-2), ("0" + sec).slice(-2), ("0" + millis).slice(-1)];
+
+        return [("0" + hour).slice(-2), ("0" + min).slice(-2), ("0" + sec).slice(-2), mTenth];
     }
 
 
