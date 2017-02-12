@@ -5,15 +5,14 @@
 
 class Stopper {
 
-    startLap(start, paused) {
-
+    startLap(start, paused, callback) {
         this.elapsedLap = new Date().getTime() - start + paused;
-        return this.convertHms(this.elapsedLap);
+        callback(this.convertHms(this.elapsedLap));
     }
 
-    startTotal(startTotal, add) {
+    startTotal(startTotal, add, callback) {
         this.elapsedTotal = new Date().getTime() - startTotal + add;
-        return this.convertHms(this.elapsedTotal);
+        callback(this.convertHms(this.elapsedTotal));
     }
 
     convertHms(input) {
@@ -31,6 +30,4 @@ class Stopper {
 
         return [("0" + hour).slice(-2), ("0" + min).slice(-2), ("0" + sec).slice(-2), mTenth];
     }
-
-
 }

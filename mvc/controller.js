@@ -131,8 +131,12 @@ class Controller {
     }
 
     updateView(start, addTotal, delayed = 0) {
-        this.view.domLapView(this.getStrategy().start(this.model.startLap(start, delayed)));
-        this.view.domTotalView(this.getStrategy().start(this.model.startTotal(start, addTotal + delayed)));
+        this.model.startLap(start, delayed, (cb) => {
+            this.view.domLapView(this.getStrategy().start(cb));
+        });
+        this.model.startTotal(start, addTotal + delayed, (cb) => {
+            this.view.domTotalView(this.getStrategy().start(cb));
+        });
         this.settings();
     }
 
